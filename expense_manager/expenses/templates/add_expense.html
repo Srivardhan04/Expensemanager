@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="main-form-wrapper">
+    <div class="main-form">
+        <h2>Add New Entry</h2>
+        <form method="POST">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label>Title</label>
+                <input type="text" name="title" placeholder="e.g. Grocery Shopping" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Category</label>
+                <input type="text" name="category" placeholder="e.g. Food, Travel, Bills" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Type</label>
+                <select name="type" required>
+                    <option value="expense">Expense</option>
+                    <option value="income">Income</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Amount (₹)</label>
+                <input type="number" name="amount" placeholder="Enter amount" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Date</label>
+                <input type="date" name="date" required>
+            </div>
+            
+            <div class="form-group">
+                <label>Note (Optional)</label>
+                <textarea name="note" placeholder="Add a short note..."></textarea>
+            </div>
+            
+            <button class="primary-btn" type="submit">
+                Save Entry
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

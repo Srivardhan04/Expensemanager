@@ -1,0 +1,151 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="dashboard">
+
+<!-- HEADER -->
+<div class="dash-header">
+  <h1>Welcome, <span>{{ user.username }}</span> 👋</h1>
+  <a href="/add/" class="primary-btn">+ Add Entry</a>
+</div>
+
+<!-- SUMMARY CARDS -->
+<div class="summary-cards">
+  <div class="card"><h3>Total Income</h3><p class="amount">₹ {{ total_income }}</p></div>
+  <div class="card"><h3>Total Expense</h3><p class="amount">₹ {{ total_expense }}</p></div>
+  <div class="card"><h3>Balance</h3><p class="amount">₹ {{ balance }}</p></div>
+  <div class="card"><h3>Today Spent</h3><p class="amount">₹ {{ today_spent }}</p></div>
+  <div class="card"><h3>This Week Spent</h3><p class="amount">₹ {{ week_spent }}</p></div>
+  <div class="card"><h3>This Month Spent</h3><p class="amount">₹ {{ month_spent }}</p></div>
+</div>
+
+<!-- FILTER BAR -->
+<div class="filter-bar">
+  <form method="get" class="filter-form">
+    <input type="text" name="search" placeholder="Search title..." value="{{ request.GET.search }}" class="filter-input">
+    <select name="category" class="filter-input">
+      <option value="">All Categories</option>
+      {% for c in categories_list %}
+      <option value="{{ c }}" {% if request.GET.category == c %}selected{% endif %}>{{ c }}</option>
+      {% endfor %}
+    </select>
+    <input type="date" name="start" value="{{ request.GET.start }}" class="filter-input">
+    <input type="date" name="end" value="{{ request.GET.end }}" class="filter-input">
+    <select name="sort" class="filter-input">
+      <option value="">Sort</option>
+      <option value="amount_high" {% if request.GET.sort == "amount_high" %}selected{% endif %}>Amount High → Low</option>
+      <option value="amount_low" {% if request.GET.sort == "amount_low" %}selected{% endif %}>Amount Low → High</option>
+      <option value="date_new" {% if request.GET.sort == "date_new" %}selected{% endif %}>Newest</option>
+      <option value="date_old" {% if request.GET.sort == "date_old" %}selected{% endif %}>Oldest</option>
+    </select>
+    <button class="primary-btn" style="width:auto">Apply</button>
+  </form>
+</div>
+
+<!-- TABLE -->
+<div class="expense-section">
+  <h2>Your Transactions</h2>
+  {% if expenses %}
+  <table class="expense-table">
+    <tr>
+      <th>Title</th><th>Category</th><th>Type</th><th>Amount</th><th>Date</th><th>Action</th>
+    </tr>
+    {% for e in expenses %}
+    <tr>
+      <td>{{ e.title }}</td>
+      <td>{{ e.category }}</td>
+      <td>
+        {% if e.type == "income" %}
+        <span style="color:#22C55E;font-weight:bold;">Income</span>
+        {% else %}
+        <span style="color:#EF4444;font-weight:bold;">Expense</span>
+        {% endif %}
+      </td>
+      <td>₹ {{ e.amount }}</td>
+      <td>{{ e.date }}</td>
+      <td>
+        <a class="edit" href="/edit/{{e.id}}/">Edit</a>
+        <span class="delete" onclick="confirmDelete('/delete/{{e.id}}/')">Delete</span>
+      </td>
+    </tr>
+    {% endfor %}
+  </table>
+  {% else %}
+  <p class="no-exp">No records yet. Add your first entry!</p>
+  {% endif %}
+</div>
+
+<!-- ANALYTICS -->
+<h2 class="analytics-title">Analytics</h2>
+
+<div style="margin:10px 0 20px 0;">
+  <a href="/reports/pdf/" class="primary-btn">⬇ PDF</a>
+  <a href="/reports/excel/" class="primary-btn">⬇ Excel</a>
+  <a href="/reports/csv/" class="primary-btn">⬇ CSV</a>
+</div>
+
+<div class="analytics-wrapper">
+  <div class="analytics-box">
+    <h3>Monthly Expense</h3>
+    <canvas id="monthlyChart"></canvas>
+  </div>
+
+  <div class="analytics-box">
+    <h3>Category Breakdown</h3>
+    <canvas id="categoryChart"></canvas>
+  </div>
+
+  <div class="analytics-box">
+    <h3>Income vs Expense</h3>
+    <canvas id="incomeExpenseChart"></canvas>
+  </div>
+</div>
+</div>
+
+<!-- CHART JS -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+const barCtx = document.getElementById('monthlyChart').getContext('2d');
+const pieCtx = document.getElementById('categoryChart').getContext('2d');
+const comboCtx = document.getElementById('incomeExpenseChart').getContext('2d');
+
+/* Monthly Expense */
+new Chart(barCtx,{
+ type:"bar",
+ data:{labels:{{ months|safe }},datasets:[{data:{{ month_totals|safe }},backgroundColor:"#4facfe",borderRadius:12}]},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{y:{beginAtZero:true}}}
+});
+
+/* Category Pie */
+new Chart(pieCtx,{
+ type:"pie",
+ data:{labels:{{ categories.keys|safe }},datasets:[{data:{{ categories.values|safe }},backgroundColor:["#3B82F6","#EF4444","#F59E0B","#10B981","#8B5CF6","#EC4899"]}]},
+ options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{position:"bottom"}}}
+});
+
+/* Income vs Expense Combo */
+new Chart(comboCtx,{
+ data:{
+  labels:{{ months|safe }},
+  datasets:[
+   {type:"bar",label:"Expense",data:{{ month_totals|safe }},backgroundColor:"#EF4444",borderRadius:10},
+   {type:"line",label:"Income",data:{{ income_totals|safe }},borderColor:"#22C55E",tension:.4,fill:true}
+  ]
+ },
+ options:{responsive:true,maintainAspectRatio:false,scales:{y:{beginAtZero:true}},plugins:{legend:{position:"bottom"}}}
+});
+</script>
+
+<!-- DELETE CONFIRM -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+function confirmDelete(url){
+ Swal.fire({
+  title:"Are you sure?",
+  text:"This cannot be undone!",
+  icon:"warning",
+  showCancelButton:true,
+  confirmButtonText:"Delete"
+ }).then((r)=>{ if(r.isConfirmed){ window.location.href=url; }});
+}
+</script>
+{% endblock %}

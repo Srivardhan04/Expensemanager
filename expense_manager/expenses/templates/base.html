@@ -1,0 +1,120 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+<title>Expense Manager</title>
+<link rel="stylesheet" href="{% static 'style.css' %}">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+/* -------- Small Professional Theme Toggle -------- */
+#themeToggle{
+  border: none;
+  outline: none;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #111;
+  color: #00ff88;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.3s ease-in-out;
+  margin-left: 10px;
+}
+body.light #themeToggle{
+  background: #eeeeee;
+  color: #111;
+}
+#themeToggle:hover{
+  transform: scale(1.1);
+  box-shadow: 0 0 10px #00ff88;
+}
+</style>
+</head>
+<body>
+<!-- NAVBAR -->
+<nav>
+    <h2>Expense Manager</h2>
+    {% if user.is_authenticated %}
+        <a href="/">Dashboard</a>
+        <a href="/add/">Add Expense</a>
+        <a href="/logout/">Logout</a>
+        <a href="/profile/">Profile</a>
+        <!-- Theme Toggle -->
+        <button id="themeToggle">🌙</button>
+    {% else %}
+        <a href="/login/">Login</a>
+        <a href="/register/">Register</a>
+        <a href="/backup/">Backup</a>
+    {% endif %}
+</nav>
+<!-- MAIN CONTENT -->
+<div class="container">
+    {% block content %}
+    {% endblock %}
+</div>
+<!-- ================= Delete Confirmation Popup ================= -->
+<div id="confirmBox">
+    <div class="confirm-card">
+        <div class="confirm-icon">
+            ⚠️
+        </div>
+        <h2>Are you sure?</h2>
+        <p>This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button onclick="closeConfirm()" class="cancel-btn">Cancel</button>
+            <button id="deleteBtn" class="delete-btn">Delete</button>
+        </div>
+    </div>
+</div>
+<!-- ================= Toast Notification ================= -->
+<div id="toast"></div>
+<!-- ================= GLOBAL SCRIPT ================= -->
+<script>
+// ================= Toast =================
+function showToast(msg){
+  let t = document.getElementById("toast");
+  t.innerHTML = msg;
+  t.classList.add("show");
+  setTimeout(()=>{ t.classList.remove("show"); },3000);
+}
+// ================= Delete Confirm =================
+function confirmDelete(url){
+    document.getElementById("confirmBox").style.display="flex";
+    document.getElementById("deleteBtn").onclick=function(){
+        window.location.href=url;
+    }
+}
+function closeConfirm(){
+    document.getElementById("confirmBox").style.display="none";
+}
+</script>
+<!-- ================= THEME TOGGLE ================= -->
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+    const toggleBtn = document.getElementById("themeToggle");
+    function applyTheme(){
+        const theme = localStorage.getItem("theme") || "dark";
+        if(theme === "light"){
+            document.body.classList.add("light");
+            toggleBtn.innerHTML = "🌞";
+        } else {
+            document.body.classList.remove("light");
+            toggleBtn.innerHTML = "🌙";
+        }
+    }
+    applyTheme();
+    toggleBtn.addEventListener("click", ()=>{
+        if(document.body.classList.contains("light")){
+            localStorage.setItem("theme","dark");
+        } else {
+            localStorage.setItem("theme","light");
+        }
+        applyTheme();
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: expense-manager
+    env: python
+    buildCommand: "./build.sh"
+    startCommand: "gunicorn expense_manager.wsgi:application"
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DEBUG
+        value: False
+      - key: ALLOWED_HOSTS
+        value: ".yourdomain.com"

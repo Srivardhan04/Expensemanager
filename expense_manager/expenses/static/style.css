@@ -1,0 +1,962 @@
+/* =========================================================
+   PREMIUM EXPENSE MANAGER UI
+   Modern Gradient Design with Glassmorphism
+   ========================================================= */
+
+/* ---------- RESET ---------- */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Inter', 'Segoe UI', -apple-system, sans-serif;
+}
+
+/* ---------- SMOOTH SCROLLING ---------- */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ---------- THEME VARIABLES ---------- */
+:root {
+    --bg: linear-gradient(135deg, #0F172A 0%, #1E293B 100%);
+    --nav: rgba(15, 23, 42, 0.8);
+    --card: rgba(30, 41, 59, 0.6);
+    --surface: rgba(51, 65, 85, 0.4);
+    --table: rgba(17, 28, 43, 0.7);
+    --border: rgba(148, 163, 184, 0.1);
+    --text: #F1F5F9;
+    --text-muted: #CBD5E1;
+    --primary: #3B82F6;
+    --primary-glow: rgba(59, 130, 246, 0.5);
+    --secondary: #8B5CF6;
+    --success: #10B981;
+    --danger: #EF4444;
+    --warning: #F59E0B;
+    --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    --shadow-hover: 0 30px 80px rgba(0, 0, 0, 0.4);
+}
+
+/*************** LIGHT MODE ***************/
+body.light {
+    --bg: linear-gradient(135deg, #F0F9FF 0%, #E0F2FE 100%);
+    --nav: rgba(255, 255, 255, 0.8);
+    --card: rgba(255, 255, 255, 0.7);
+    --surface: rgba(241, 245, 249, 0.8);
+    --table: rgba(255, 255, 255, 0.9);
+    --border: rgba(226, 232, 240, 0.5);
+    --text: #0F172A;
+    --text-muted: #64748B;
+    --primary: #2563EB;
+    --primary-glow: rgba(37, 99, 235, 0.3);
+    --secondary: #7C3AED;
+    --success: #059669;
+    --danger: #DC2626;
+    --warning: #D97706;
+    --shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 30px 80px rgba(0, 0, 0, 0.15);
+}
+
+/*************** GLOBAL ***************/
+body {
+    background: var(--bg);
+    background-attachment: fixed;
+    color: var(--text);
+    min-height: 100vh;
+    transition: all 0.3s ease;
+}
+
+/* ---------- ANIMATED BACKGROUND ---------- */
+body::before {
+    content: '';
+    position: fixed;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(59, 130, 246, 0.1) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: backgroundMove 20s linear infinite;
+    pointer-events: none;
+    z-index: 0;
+}
+
+@keyframes backgroundMove {
+    0% { transform: translate(0, 0); }
+    100% { transform: translate(50px, 50px); }
+}
+
+/* ---------- NAVBAR ---------- */
+nav {
+    width: 100%;
+    padding: 20px 40px;
+    background: var(--nav);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+}
+
+nav h2 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-size: 28px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    text-shadow: 0 0 30px var(--primary-glow);
+}
+
+.nav-links {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+nav a {
+    color: var(--text);
+    text-decoration: none;
+    padding: 10px 20px;
+    border-radius: 12px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-weight: 500;
+    position: relative;
+    overflow: hidden;
+}
+
+nav a::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--gradient-1);
+    transition: left 0.3s ease;
+    z-index: -1;
+}
+
+nav a:hover::before {
+    left: 0;
+}
+
+nav a:hover {
+    color: white;
+    transform: translateY(-2px);
+}
+
+/*************** THEME TOGGLE ***************/
+#themeToggle {
+    padding: 10px 16px;
+    border-radius: 50px;
+    border: 2px solid var(--border);
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    cursor: pointer;
+    font-size: 18px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+#themeToggle:hover {
+    background: var(--gradient-3);
+    color: white;
+    transform: scale(1.1) rotate(20deg);
+    box-shadow: 0 8px 25px var(--primary-glow);
+}
+
+/*************** DASHBOARD ***************/
+.dashboard {
+    width: 90%;
+    max-width: 1400px;
+    margin: 40px auto;
+    position: relative;
+    z-index: 1;
+}
+
+.dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.dash-header h1 {
+    font-size: 42px;
+    font-weight: 800;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.dash-header span {
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.primary-btn {
+    padding: 12px 24px;
+    background: var(--gradient-1);
+    border-radius: 12px;
+    color: white;
+    font-weight: 600;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 15px var(--primary-glow);
+    position: relative;
+    overflow: hidden;
+}
+
+.primary-btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.primary-btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.primary-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+/*************** SUMMARY CARDS ***************/
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.card {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    padding: 28px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: var(--shadow);
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.card:hover::before {
+    opacity: 1;
+}
+
+.card:hover {
+    transform: translateY(-10px) scale(1.02);
+    box-shadow: var(--shadow-hover);
+    border-color: var(--primary);
+}
+
+.card h3 {
+    font-size: 14px;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 12px;
+}
+
+.amount {
+    font-size: 36px;
+    font-weight: 800;
+    background: var(--gradient-3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+    z-index: 1;
+}
+
+.card:nth-child(1) .amount {
+    background: var(--gradient-4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card:nth-child(2) .amount {
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.card:nth-child(3) .amount {
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/*************** FILTER BAR ***************/
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    margin: 30px 0;
+    flex-wrap: wrap;
+}
+
+.filter-input {
+    padding: 12px 16px;
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px var(--primary-glow);
+}
+
+/*************** TABLE ***************/
+.expense-section {
+    margin-top: 40px;
+}
+
+.expense-section h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.expense-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+
+.expense-table thead {
+    background: var(--gradient-1);
+}
+
+.expense-table th {
+    padding: 18px;
+    text-align: center;
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 12px;
+    letter-spacing: 1px;
+}
+
+.expense-table td {
+    padding: 16px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+}
+
+.expense-table tr {
+    background: var(--table);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.expense-table tbody tr:hover {
+    background: var(--surface);
+    transform: scale(1.01);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.expense-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.edit {
+    color: var(--primary);
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.edit:hover {
+    background: var(--primary);
+    color: white;
+    transform: scale(1.1);
+}
+
+.delete {
+    color: var(--danger);
+    cursor: pointer;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    display: inline-block;
+}
+
+.delete:hover {
+    background: var(--danger);
+    color: white;
+    transform: scale(1.1);
+}
+
+/*************** ANALYTICS ***************/
+.analytics-title {
+    margin-top: 60px;
+    font-size: 32px;
+    font-weight: 800;
+    background: var(--gradient-2);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+}
+
+.analytics-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    gap: 30px;
+}
+
+.analytics-box {
+    background: var(--card);
+    backdrop-filter: blur(20px);
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    transition: all 0.4s ease;
+}
+
+.analytics-box:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-hover);
+}
+
+.analytics-box h3 {
+    margin-bottom: 20px;
+    font-size: 20px;
+    background: var(--gradient-3);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.analytics-box canvas {
+    width: 100% !important;
+    height: 300px !important;
+}
+
+/*************** FORM STYLING ***************/
+.main-form-wrapper {
+    width: 100%;
+    min-height: calc(100vh - 100px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.main-form {
+    width: 100%;
+    max-width: 550px;
+    background: var(--card);
+    backdrop-filter: blur(30px);
+    -webkit-backdrop-filter: blur(30px);
+    padding: 40px;
+    border-radius: 24px;
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+    animation: formSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes formSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.main-form::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    opacity: 0.3;
+    animation: formGlow 4s ease-in-out infinite;
+}
+
+@keyframes formGlow {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(10%, 10%) scale(1.1); }
+}
+
+.main-form h2 {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    background: var(--gradient-1);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 30px;
+    position: relative;
+    z-index: 1;
+}
+
+.form-group {
+    margin-bottom: 24px;
+    position: relative;
+    z-index: 1;
+}
+
+.form-group label {
+    display: block;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.main-form input,
+.main-form select,
+.main-form textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 12px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    backdrop-filter: blur(10px);
+    color: var(--text);
+    font-size: 15px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-form input:focus,
+.main-form select:focus,
+.main-form textarea:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 4px var(--primary-glow);
+    transform: translateY(-2px);
+}
+
+.main-form textarea {
+    min-height: 100px;
+    resize: vertical;
+    font-family: 'Inter', 'Segoe UI', sans-serif;
+}
+
+.main-form button {
+    width: 100%;
+    margin-top: 24px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.error-message {
+    background: rgba(239, 68, 68, 0.15);
+    border: 2px solid var(--danger);
+    color: var(--danger);
+    padding: 14px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+    font-weight: 600;
+    animation: shake 0.5s ease;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-10px); }
+    75% { transform: translateX(10px); }
+}
+
+/*************** TOAST ***************/
+#toast {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--gradient-4);
+    color: white;
+    padding: 16px 24px;
+    border-radius: 12px;
+    display: none;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    animation: toastSlide 0.4s ease;
+    z-index: 10000;
+}
+
+@keyframes toastSlide {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+/*************** MODAL ***************/
+#confirmBox {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(10px);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.confirm-card {
+    width: 420px;
+    background: var(--card);
+    backdrop-filter: blur(30px);
+    border: 2px solid var(--border);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    color: var(--text);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    animation: modalPop 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes modalPop {
+    from {
+        transform: scale(0.7);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/*************** RESPONSIVE ***************/
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 20px;
+    }
+    
+    nav h2 {
+        font-size: 22px;
+    }
+    
+    .dashboard {
+        width: 95%;
+    }
+    
+    .dash-header h1 {
+        font-size: 28px;
+    }
+    
+    .summary-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .analytics-wrapper {
+        grid-template-columns: 1fr;
+    }
+    
+    .main-form {
+        padding: 30px 20px;
+    }
+    
+    .filter-bar {
+        flex-direction: column;
+    }
+    
+    .expense-table {
+        font-size: 12px;
+    }
+    
+    .expense-table th,
+    .expense-table td {
+        padding: 10px 8px;
+    }
+}
+
+/*************** SCROLLBAR ***************/
+::-webkit-scrollbar {
+    width: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--gradient-1);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--gradient-2);
+}
+
+/* ===== FORM LAYOUT FIX ===== */
+
+.form-container{
+  width:100%;
+  display:flex;
+  justify-content:center;
+  padding-top:50px;
+}
+
+.form-card{
+  width:480px;
+  background:var(--card);
+  padding:30px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  box-shadow:0 15px 40px rgba(0,0,0,.4);
+}
+
+.form-card h2{
+  text-align:center;
+  margin-bottom:20px;
+  color:var(--primary);
+}
+
+.form-group{
+  display:flex;
+  flex-direction:column;
+  margin-bottom:14px;
+}
+
+.form-group label{
+  font-size:14px;
+  color:var(--text-muted);
+  margin-bottom:4px;
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select{
+  width:100%;
+  padding:10px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--surface);
+  color:var(--text);
+}
+
+textarea{
+  resize:none;
+  height:90px;
+}
+
+.full-btn{
+  width:100%;
+  margin-top:10px;
+}
+
+/* ===== PHASE 15: ANIMATIONS ===== */
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dashboard {
+  animation: fadeUp 0.8s ease;
+}
+
+.summary-cards .card {
+  animation: fadeUp 0.8s ease;
+}
+
+.summary-cards .card:nth-child(1){animation-delay:.1s}
+.summary-cards .card:nth-child(2){animation-delay:.2s}
+.summary-cards .card:nth-child(3){animation-delay:.3s}
+.summary-cards .card:nth-child(4){animation-delay:.4s}
+.summary-cards .card:nth-child(5){animation-delay:.5s}
+.summary-cards .card:nth-child(6){animation-delay:.6s}
+
+.expense-table tr {
+  animation: fadeUp 0.5s ease;
+}
+
+.analytics-box {
+  animation: fadeUp 1s ease;
+}
+
+/* Button hover lift */
+.primary-btn {
+  transition: all .3s ease;
+}
+.primary-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(0,0,0,.25);
+}
+
+/* Card hover effect */
+.card {
+  transition: all .3s ease;
+}
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+  box-shadow: 0 15px 40px rgba(0,0,0,.3);
+}
+
+/* Table row hover glow */
+.expense-table tr:hover {
+  box-shadow: inset 0 0 0 1px var(--primary);
+}
+
+/* Input focus animation */
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(59,130,246,.25);
+}
+
+/* ================= PHASE 15.2 ADDITIONS ================= */
+
+/* Smooth theme transition */
+body, nav, .card, .analytics-box, .expense-table, .main-form {
+  transition: background .4s ease, color .4s ease, border .4s ease;
+}
+
+/* Filter bar slide down */
+.filter-bar {
+  animation: slideDown .6s ease;
+}
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Button ripple effect */
+.primary-btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.primary-btn::after {
+  content: "";
+  position: absolute;
+  width: 0;
+  height: 0;
+  background: rgba(255,255,255,.4);
+  border-radius: 50%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+}
+
+.primary-btn:active::after {
+  width: 200%;
+  height: 200%;
+  opacity: 1;
+  transition: 0s;
+}
+
+/* Toast slide from bottom */
+#toast {
+  bottom: -100px;
+  opacity: 0;
+  display: block;
+  transition: all .5s ease;
+}
+
+#toast.show {
+  bottom: 30px;
+  opacity: 1;
+}
+
+/* Modal zoom refinement */
+.confirm-card {
+  animation: zoomIn .35s ease;
+}
+
+@keyframes zoomIn {
+  from { opacity: 0; transform: scale(.7); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+/* ===== Phase 15.3 Chart Glow ===== */
+.analytics-box:hover canvas {
+  filter: drop-shadow(0 0 20px rgba(59,130,246,.4));
+  transition:.4s ease;
+}

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="main-form-wrapper">
+  <div class="main-form">
+    <h2>Backup & Restore</h2>
+
+    <a href="/backup/download/" class="primary-btn" style="display:block; text-align:center;">
+      ⬇ Download Backup (CSV)
+    </a>
+
+    <hr style="margin:30px 0; border-color:rgba(255,255,255,.1);">
+
+    <form method="post" enctype="multipart/form-data" action="/backup/restore/">
+      {% csrf_token %}
+      <label>Restore from CSV</label>
+      <input type="file" name="file" required>
+      <button class="primary-btn" style="margin-top:15px;">Restore</button>
+    </form>
+  </div>
+</div>
+{% endblock %}
