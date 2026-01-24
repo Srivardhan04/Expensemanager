@@ -1,4 +1,4 @@
-💰 Expense Manager – Full Stack Django Project!!
+💰 Expense Manager – Full Stack Django Project
 
 A full-stack web application built using Django, HTML, CSS, and JavaScript that helps users track income and expenses, visualize spending patterns, and export financial reports.
 🚀 Features
