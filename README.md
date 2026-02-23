@@ -1,4 +1,4 @@
-#    Expense Manager
+# Expense Manager
 
 A comprehensive web-based expense tracking and management application built with Django. Track your income, expenses, and visualize your spending patterns with intuitive charts and reports.
 
